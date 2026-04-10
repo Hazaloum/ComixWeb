@@ -27,7 +27,7 @@ export function CtaSection() {
     country: "",
     message: "",
   });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "success">("idle");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -48,20 +48,16 @@ export function CtaSection() {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("loading");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error();
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
+    const subject = encodeURIComponent(
+      `New enquiry — ${form.name}${form.company ? ` · ${form.company}` : ""}`
+    );
+    const body = encodeURIComponent(
+      `Name: ${form.name}\nCompany: ${form.company || "—"}\nEmail: ${form.email}\nMarket: ${form.country || "—"}\n\nMessage:\n${form.message}`
+    );
+    window.location.href = `mailto:y.mahmoud@comixpharma.com?subject=${subject}&body=${body}`;
+    setStatus("success");
   };
 
   return (
@@ -178,20 +174,13 @@ export function CtaSection() {
                       />
                     </div>
 
-                    {status === "error" && (
-                      <p className="text-sm text-red-500">
-                        Something went wrong. Please email us directly at y.mahmoud@comixpharma.com
-                      </p>
-                    )}
-
                     <div className="flex flex-col sm:flex-row items-start gap-4 pt-2">
                       <Button
                         type="submit"
                         size="lg"
-                        disabled={status === "loading"}
-                        className="bg-foreground hover:bg-foreground/90 text-background px-8 h-14 text-base rounded-full group disabled:opacity-50"
+                        className="bg-foreground hover:bg-foreground/90 text-background px-8 h-14 text-base rounded-full group"
                       >
-                        {status === "loading" ? "Sending..." : "Send Enquiry"}
+                        Send Enquiry
                         <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                       </Button>
                       <a
