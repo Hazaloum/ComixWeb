@@ -138,8 +138,8 @@ export function HeroSection() {
       </div>
       
       {/* Stats marquee - full width outside container */}
-      <div 
-        className={`absolute bottom-24 left-0 right-0 transition-all duration-700 delay-500 ${
+      <div
+        className={`absolute bottom-8 left-0 right-0 transition-all duration-700 delay-500 ${
           isVisible ? "opacity-100" : "opacity-0"
         }`}
       >
