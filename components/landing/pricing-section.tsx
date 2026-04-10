@@ -52,7 +52,7 @@ const services = [
 
 export function PricingSection() {
   return (
-    <section id="contact" className="relative py-32 lg:py-40 border-t border-foreground/10">
+    <section className="relative py-32 lg:py-40 border-t border-foreground/10">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Header */}
         <div className="max-w-3xl mb-20">
@@ -105,16 +105,18 @@ export function PricingSection() {
               </ul>
 
               {/* CTA */}
-              <button
-                className={`w-full py-4 flex items-center justify-center gap-2 text-sm font-medium transition-all group ${
-                  service.highlight
-                    ? "bg-foreground text-primary-foreground hover:bg-foreground/90"
-                    : "border border-foreground/20 text-foreground hover:border-foreground hover:bg-foreground/5"
-                }`}
-              >
-                {service.cta}
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </button>
+              <a href="#contact">
+                <button
+                  className={`w-full py-4 flex items-center justify-center gap-2 text-sm font-medium transition-all group ${
+                    service.highlight
+                      ? "bg-foreground text-primary-foreground hover:bg-foreground/90"
+                      : "border border-foreground/20 text-foreground hover:border-foreground hover:bg-foreground/5"
+                  }`}
+                >
+                  {service.cta}
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </button>
+              </a>
             </div>
           ))}
         </div>

@@ -33,7 +33,7 @@ const footerLinks = {
 
 const socialLinks = [
   { name: "LinkedIn", href: "#" },
-  { name: "Email", href: "mailto:info@comixpharma.com" },
+  { name: "Email", href: "mailto:y.mahmoud@comixpharma.com" },
 ];
 
 export function FooterSection() {
