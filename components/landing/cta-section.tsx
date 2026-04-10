@@ -27,7 +27,7 @@ export function CtaSection() {
     country: "",
     message: "",
   });
-  const [status, setStatus] = useState<"idle" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -48,16 +48,28 @@ export function CtaSection() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(
-      `New enquiry — ${form.name}${form.company ? ` · ${form.company}` : ""}`
-    );
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nCompany: ${form.company || "—"}\nEmail: ${form.email}\nMarket: ${form.country || "—"}\n\nMessage:\n${form.message}`
-    );
-    window.location.href = `mailto:y.mahmoud@comixpharma.com?subject=${subject}&body=${body}`;
-    setStatus("success");
+    setStatus("loading");
+    try {
+      const res = await fetch("https://formsubmit.co/ajax/y.mahmoud@comixpharma.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          company: form.company || "—",
+          email: form.email,
+          market: form.country || "—",
+          message: form.message,
+          _subject: `New enquiry — ${form.name}${form.company ? ` · ${form.company}` : ""}`,
+          _captcha: "false",
+        }),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -174,13 +186,20 @@ export function CtaSection() {
                       />
                     </div>
 
+                    {status === "error" && (
+                      <p className="text-sm text-red-500">
+                        Something went wrong. Email us directly at y.mahmoud@comixpharma.com
+                      </p>
+                    )}
+
                     <div className="flex flex-col sm:flex-row items-start gap-4 pt-2">
                       <Button
                         type="submit"
                         size="lg"
-                        className="bg-foreground hover:bg-foreground/90 text-background px-8 h-14 text-base rounded-full group"
+                        disabled={status === "loading"}
+                        className="bg-foreground hover:bg-foreground/90 text-background px-8 h-14 text-base rounded-full group disabled:opacity-50"
                       >
-                        Send Enquiry
+                        {status === "loading" ? "Sending..." : "Send Enquiry"}
                         <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                       </Button>
                       <a
